@@ -9,18 +9,18 @@ import (
 )
 
 type Client struct {
-	ServerIp string
+	ServerIp   string
 	ServerPort int
-	Name string
-	conn net.Conn
-	flag int
+	Name       string
+	conn       net.Conn
+	flag       int
 }
 
 func NewClient(serverIp string, serverPort int) *Client {
 	client := &Client{
-		ServerIp: serverIp,
+		ServerIp:   serverIp,
 		ServerPort: serverPort,
-		flag: 999,
+		flag:       999,
 	}
 
 	conn, err := net.Dial("tcp", fmt.Sprintf("%s:%d", serverIp, serverPort))
@@ -36,7 +36,7 @@ func NewClient(serverIp string, serverPort int) *Client {
 
 // 处理server回应的消息，直接显示到标准输出
 
-func(client *Client) DealResponse() {
+func (client *Client) DealResponse() {
 	// 一旦client.conn有数据，就直接copy到stdout上，永久阻塞监听
 	io.Copy(os.Stdout, client.conn)
 }
@@ -50,7 +50,7 @@ func (client *Client) menu() bool {
 
 	fmt.Scanln(&flag)
 
-	if (flag >= 0 && flag <= 3) {
+	if flag >= 0 && flag <= 3 {
 		client.flag = flag
 		return true
 	} else {
@@ -68,7 +68,7 @@ func (client *Client) PublicChat() {
 		if len(chatMsg) != 0 {
 			sendMsg := chatMsg + "\n"
 			_, err := client.conn.Write([]byte(sendMsg))
-			if (err != nil) {
+			if err != nil {
 				fmt.Println("conn Write err: ", err)
 				break
 			}
@@ -116,7 +116,7 @@ func (client *Client) PrivateChat() {
 			if len(chatMsg) != 0 {
 				sendMsg := "to|" + remoteName + "|" + chatMsg + "\n\n"
 				_, err := client.conn.Write([]byte(sendMsg))
-				if (err != nil) {
+				if err != nil {
 					fmt.Println("conn Write err: ", err)
 					break
 				}
@@ -149,10 +149,11 @@ func (client *Client) Run() {
 			fmt.Println("更新用户名模式选择...")
 			// 更新用户名
 			client.UpdateName()
-			break;
+			break
 		}
 	}
 }
+
 var serverIp string
 var serverPort int
 

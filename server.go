@@ -49,7 +49,7 @@ func (this *Server) Handler(conn net.Conn) {
 	user := NewUser(conn, this)
 	user.Online()
 
-	isLive := make(chan bool)
+    isLive := make(chan bool)
 	go func() {
 		buf := make([]byte, 4096)
 		for {
